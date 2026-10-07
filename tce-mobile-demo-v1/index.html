@@ -646,6 +646,7 @@ button.notification:active { transform: scale(0.975); background: rgba(255,255,2
 
 .v-qgroup { display: flex; flex-direction: column; gap: 12px; }
 .v-qgroup > p { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.2; }
+.v-qhint { font-weight: 400; color: var(--v-text-grey); }
 .v-options { display: flex; flex-direction: column; gap: 12px; }
 
 .v-select {
@@ -680,6 +681,18 @@ button.notification:active { transform: scale(0.975); background: rgba(255,255,2
   place-items: center;
 }
 .v-select.selected .v-radio { box-shadow: none; }
+
+.v-check {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--v-blue);
+  display: grid;
+  place-items: center;
+}
+.v-select.selected .v-check { box-shadow: none; color: var(--v-blue); }
 .v-select.selected .v-radio::after {
   content: "";
   width: 6px;
@@ -1145,13 +1158,13 @@ window.addEventListener("error", function (e) {
   var DEMO = {
     patient:   { firstName: "David", lastName: "Whitcombe", age: 64 },
     trust:     {
-      name: "Bristol NHS Foundation Trust",
-      short: "BFT",
-      senderId: "BFT",
+      name: "Royal Free London NHS Foundation Trust",
+      short: "RFL",            /* the trust's own abbreviation for itself */
+      senderId: "RFL",         /* fits the 11-character SMS sender limit */
       /* Every portal link is built from this, so the domain changes once.
-         Deliberately fake, per the canon: BFT is a real trust. */
+         Deliberately fake, per the canon: RFL is a real trust. */
       domain: "patients.example.nhs.uk",
-      site: "Bristol Heart Institute"
+      site: "Royal Free Hospital"
     },
     specialty: "Cardiology",
     procedure: "ablation",          /* clinical name, for the record */
@@ -1159,7 +1172,7 @@ window.addEventListener("error", function (e) {
     /* Flecainide is a class 1C antiarrhythmic used for rhythm control in AF.
        Antiarrhythmics are commonly stopped five days before an ablation.
        NEEDS CLINICAL SIGN-OFF before the demo: the five-day figure comes
-       from a US hospital patient guide, not NHS or BFT guidance. */
+       from a US hospital patient guide, not NHS or RFL guidance. */
     medication: "flecainide",
     portal:    { url: "#" },
     timeline: {
@@ -1210,7 +1223,7 @@ window.addEventListener("error", function (e) {
       dateLong: "Tue 12th January 2027",
       dateShort: "Tue 12 Jan",
       time: "9:45am",
-      site: "Bristol Heart Institute"
+      site: "Royal Free Hospital"
     }
   };
 
@@ -1782,16 +1795,18 @@ window.addEventListener("error", function (e) {
 
     "questionnaire": {
       title: "Pre-appointment questionnaire",
-      intro: "A few questions so we can get everything ready for your visit. It takes about 2 minutes.",
+      intro: "A few questions so the team has what it needs before your appointment. It takes about 2 minutes.",
       when: "questionnaire",
       back: "Back to my care",
       questions: [
-        { q: "Do you need an interpreter at your appointment?",
-          options: ["No", "Yes, a spoken language", "Yes, British Sign Language"] },
-        { q: "Will someone be coming with you?",
-          options: ["No, I will come on my own", "Yes, one person", "I need help getting there"] },
-        { q: "Is there anything that would make the visit easier for you?",
-          options: ["Nothing I can think of", "Step-free access", "A quiet place to wait"] }
+        { q: "Which of these have you noticed?", multi: true,
+          options: ["Palpitations", "Breathlessness", "Dizziness or fainting",
+                    "Chest pain", "None of these"] },
+        { q: "Which of these medicines are you taking?", multi: true,
+          options: ["Bisoprolol", "A blood thinner such as apixaban or warfarin",
+                    "Other heart medicines", "None"] },
+        { q: "Have you had a heart procedure before, like an ablation or cardioversion?",
+          options: ["Yes", "No", "Not sure"] }
       ],
       done: { title: "Questionnaire sent",
               body: "Thank you. The team will see this before your appointment on " + DEMO.appointment.dateShort + "." }
@@ -1803,29 +1818,30 @@ window.addEventListener("error", function (e) {
       when: "preOpForm",
       back: "Back to my care",
       questions: [
-        { q: "Do you have any allergies?",
-          options: ["No", "Yes, to a medicine", "Yes, to something else"] },
-        { q: "Have you had an anaesthetic before?",
-          options: ["No", "Yes, with no problems", "Yes, and there were problems"] },
-        { q: "Do you smoke?",
-          options: ["No, never", "I used to", "Yes"] }
+        { q: "Do you have any of these?", multi: true,
+          options: ["High blood pressure", "Irregular heartbeat", "Asthma or COPD",
+                    "Sleep apnoea", "Diabetes", "None of these"] },
+        { q: "Have you or a blood relative had problems with an anaesthetic?",
+          options: ["Yes", "No", "Not sure"] },
+        { q: "Do you have any allergies?", multi: true,
+          options: ["Medicines", "Plasters or latex", "Foods", "No known allergies"] }
       ],
       done: { title: "Assessment sent",
               body: "Thank you. The team will be in touch if they need anything else before your surgery." }
     },
 
     "three-month": {
-      title: "Tell us how you are",
+      title: "Review for discharge",
       intro: "It has been three months since your procedure. Your answers help us decide whether you still need to be seen by the team.",
       when: "pifuForm",
       back: "Back to my care",
       questions: [
         { q: "Since your procedure, how often have you noticed palpitations?",
           options: ["Not at all", "Once or twice", "Most days", "Every day"] },
-        { q: "Has your breathlessness changed?",
-          options: ["Better than before", "About the same", "Worse than before"] },
-        { q: "Are you taking your medicines as prescribed?",
-          options: ["Yes, all of them", "Most of the time", "No"] }
+        { q: "Since your procedure, have you had any of these?", multi: true,
+          options: ["Chest pain", "Fainting", "Sudden weakness or numbness", "None of these"] },
+        { q: "How much does your heart condition limit your daily activities now?",
+          options: ["Not at all", "A little", "Quite a lot", "A lot"] }
       ],
       done: { title: "Thank you",
               body: "Your answers have been sent to the cardiology team. They will review them and let you know what happens next." }
@@ -1838,6 +1854,12 @@ window.addEventListener("error", function (e) {
     return FORM_STATE[id];
   }
   function resetForm() { FORM_STATE = {}; }
+
+  /* The tick from Checkbox (pp vision), Size=Large. */
+  var CHECK_TICK =
+    '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">' +
+      '<path d="M4 11.0714L8.1843 15L16 4" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   function stepForm(id) {
     return function () {
@@ -1860,11 +1882,18 @@ window.addEventListener("error", function (e) {
 
       var q = f.questions[st.index];
       var chosen = st.answers[st.index];
+      var picked = function (i) {
+        return q.multi ? (chosen || []).indexOf(i) > -1 : chosen === i;
+      };
       var pct = Math.round(((st.index + 1) / total) * 100);
       var options = "";
       for (var i = 0; i < q.options.length; i++) {
-        options += '<button type="button" class="v-select' + (chosen === i ? " selected" : "") +
-          '" data-opt="' + i + '"><span>' + q.options[i] + '</span><span class="v-radio"></span></button>';
+        options += '<button type="button" class="v-select' + (picked(i) ? " selected" : "") +
+          '" data-opt="' + i + '"><span>' + q.options[i] + '</span>' +
+          (q.multi
+            ? '<span class="v-check">' + (picked(i) ? CHECK_TICK : "") + '</span>'
+            : '<span class="v-radio"></span>') +
+          '</button>';
       }
 
       return '' +
@@ -1877,7 +1906,7 @@ window.addEventListener("error", function (e) {
               '<div class="v-titleblock"><h1>' + f.title + '</h1><p>' + f.intro + '</p></div>' +
               '<div class="v-progress"><i style="width:' + pct + '%"></i></div>' +
             '</div>' +
-            '<div class="v-qgroup"><p>' + q.q + '</p>' +
+            '<div class="v-qgroup"><p>' + q.q + (q.multi ? ' <span class="v-qhint">Pick any</span>' : "") + '</p>' +
               '<div class="v-options">' + options + '</div></div>' +
           '</div>' +
           '<div class="v-actions">' +
@@ -3088,7 +3117,16 @@ window.addEventListener("error", function (e) {
     if (opt) {
       e.stopPropagation();
       var fs = formState(STEPS[index].form);
-      fs.answers[fs.index] = parseInt(opt.getAttribute("data-opt"), 10);
+      var fq = FORMS[STEPS[index].form].questions[fs.index];
+      var pick = parseInt(opt.getAttribute("data-opt"), 10);
+      if (fq.multi) {
+        var set = fs.answers[fs.index] || [];
+        var at = set.indexOf(pick);
+        if (at > -1) set.splice(at, 1); else set.push(pick);
+        fs.answers[fs.index] = set;
+      } else {
+        fs.answers[fs.index] = pick;
+      }
       render();
       return;
     }
