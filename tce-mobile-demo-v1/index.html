@@ -529,6 +529,8 @@ button.notification:active { transform: scale(0.975); background: rgba(255,255,2
 .v-card-titlerow b { flex: 1 1 auto; min-width: 0; }
 .v-card-titlerow .v-tag { flex: 0 0 auto; margin-left: auto; }
 .v-card-text b { font-size: 14px; font-weight: 600; line-height: 1.2; }
+.v-card-foot { padding-top: 4px; }
+.v-card.soft .v-card-stripe { background: var(--v-blue-soft); }
 .v-card-sub { font-size: 12px; font-weight: 400; line-height: 1.17; color: var(--v-text-grey); }
 
 .v-older[data-goto] { cursor: pointer; }
@@ -554,6 +556,8 @@ button.notification:active { transform: scale(0.975); background: rgba(255,255,2
   background: var(--v-blue-soft);
 }
 .v-appt.past { background: var(--v-grey); }
+.v-appt[data-goto] { cursor: pointer; }
+.v-appt[data-goto]:active { opacity: 0.7; }
 .v-appt.past .v-appt-main { border-bottom-color: #D3D2D2; }
 .v-appt-main {
   display: flex;
@@ -567,6 +571,18 @@ button.notification:active { transform: scale(0.975); background: rgba(255,255,2
 .v-appt-when { font-size: 18px; font-weight: 600; line-height: 1.2; }
 .v-appt-time { flex: 0 0 auto; font-size: 18px; font-weight: 600; line-height: 1.2; }
 .v-appt-where { display: flex; align-items: center; gap: 2px; font-size: 12px; font-weight: 400; line-height: 1.2; }
+
+/* --- Plain prose panel, for the appointment summary --- */
+.v-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 12px;
+}
+.v-prose p { margin: 0; font-size: 12px; font-weight: 400; line-height: 1.35; color: var(--v-text-grey); }
+.v-prose ul { margin: 0; padding: 0 0 0 16px; display: flex; flex-direction: column; gap: 6px; }
+.v-prose li b { font-weight: 600; color: var(--v-black); }
+.v-prose li { font-size: 12px; font-weight: 400; line-height: 1.35; color: var(--v-text-grey); }
 
 /* --- Status card (Intro home, 4140:14648) --- */
 .v-status {
@@ -609,6 +625,7 @@ button.notification:active { transform: scale(0.975); background: rgba(255,255,2
 .v-tag.dark    { background: var(--v-blue); color: #fff; }
 .v-tag.white   { background: #fff;          color: var(--v-black); }
 .v-tag.outline { background: none;         color: var(--v-text-grey); box-shadow: inset 0 0 0 1px var(--v-grey); }
+.v-tag.info    { background: var(--v-blue-soft); color: var(--v-black); }
 .v-tag.grey    { background: var(--v-grey);  color: var(--v-black); }
 .v-tag.warning { background: #FFEBD5;        color: var(--v-black); }
 .v-tag.error   { background: #F7DDDA;        color: var(--v-black); }
@@ -845,6 +862,8 @@ button.notification:active { transform: scale(0.975); background: rgba(255,255,2
 .v-measure-note b { font-size: 12px; font-weight: 400; line-height: 1.2; }
 .v-measure-note span { font-size: 12px; font-weight: 400; line-height: 1.2; color: var(--v-text-grey); }
 
+.v-letter .v-section > h2 { padding: 0 12px; }
+.v-seenby { margin: 0; padding: 0 12px; font-size: 12px; font-weight: 400; line-height: 1.35; color: var(--v-text-grey); }
 .v-results-foot { padding: 0 12px; font-size: 12px; font-weight: 400; line-height: 1.3; color: var(--v-text-grey); }
 
 /* --- Useful links tiles --- */
@@ -1083,6 +1102,20 @@ button.notification:active { transform: scale(0.975); background: rgba(255,255,2
   text-transform: uppercase; opacity: 0.5; margin: 0 0 12px;
 }
 .presenter-steps { flex: 1 1 auto; overflow-y: auto; margin: 0 0 14px; }
+
+/* the stage jumper: big targets, nothing else on screen */
+.stage-list { flex: 1 1 auto; overflow-y: auto; margin: 0 0 14px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: start; }
+.stage-row {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 14px 12px; border: 0; border-radius: 12px;
+  background: rgba(255,255,255,0.08); color: #fff;
+  font-family: var(--sf); text-align: left; cursor: pointer;
+}
+.stage-row:active { background: rgba(255,255,255,0.18); }
+.stage-row.current { background: rgba(255,255,255,0.22); }
+.stage-row b { font-size: 17px; font-weight: 600; letter-spacing: 0.04em; }
+.stage-row span { font-size: 12px; opacity: 0.55; }
 .presenter-step {
   display: flex; gap: 10px; align-items: baseline; width: 100%;
   text-align: left; border: 0; background: none; color: #fff;
@@ -1118,6 +1151,14 @@ button.notification:active { transform: scale(0.975); background: rgba(255,255,2
     <button class="nav-pill" id="navPill" type="button" data-nav="next">Next
       <svg width="8" height="13" viewBox="0 0 8 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 1l4.5 5.5L2 12"/></svg>
     </button>
+  </div>
+
+  <div class="presenter-panel stages" id="stagePanel">
+    <h2>Jump to a stage</h2>
+    <div class="stage-list" id="stageList"></div>
+    <div class="presenter-actions">
+      <button type="button" id="btnStageClose">Close</button>
+    </div>
   </div>
 
   <div class="presenter-panel" id="presenterPanel">
@@ -1167,6 +1208,9 @@ window.addEventListener("error", function (e) {
       site: "Royal Free Hospital"
     },
     specialty: "Cardiology",
+    clinician: "Dr Cox",                      /* the consultant, per the canon */
+    clinicianFull: "Dr Rachel Cox",
+    clinicianRole: "Consultant Cardiologist",
     procedure: "ablation",          /* clinical name, for the record */
     procedureForPatients: "surgery", /* what David is actually told */
     /* Flecainide is a class 1C antiarrhythmic used for rhythm control in AF.
@@ -1190,17 +1234,26 @@ window.addEventListener("error", function (e) {
       testsReminder:    { date: "Friday 11 December",    time: "9:30" },
       myCare:           { date: "Wednesday 30 September", time: "9:16" },
       quietWait:        { date: "Tuesday 10 November",   time: "10:12" },
+      bookingChaser:    { date: "Wednesday 18 November", time: "9:15" },
       quietPreBooking:  { date: "Thursday 19 November",  time: "14:02" },
       quietEvening:     { date: "Thursday 19 November",  time: "17:40" },
       portalAfterBooking:{ date: "Thursday 19 November", time: "17:42" },
       appointmentsPage: { date: "Thursday 19 November", time: "17:43" },
       quietPreTests:    { date: "Friday 11 December",    time: "9:28" },
       appointmentDay:   { date: "Tuesday 12 January",     time: "8:15" },
+      apptSummary:      { date: "Tuesday 12 January",     time: "10:40" },
       preOpForm:        { date: "Tuesday 12 January",     time: "14:20" },
+      shortNotice:      { date: "Thursday 14 January",    time: "11:30" },
+      quietPreChecklist:{ date: "Tuesday 2 February",     time: "8:55" },
+      checklistIntro:   { date: "Tuesday 2 February",     time: "9:00" },
       quietPreMeds:     { date: "Thursday 4 February",    time: "8:55" },
       medsReminder:     { date: "Thursday 4 February",    time: "9:00" },
       preOpChecklist:   { date: "Sunday 7 February",     time: "10:05" },
       quietSurgeryDay:  { date: "Tuesday 9 February",    time: "6:20" },
+      postOp:           { date: "Wednesday 10 February", time: "11:20" },
+      quietRecovery:    { date: "Wednesday 17 February", time: "10:25" },
+      recoveryGuidance: { date: "Wednesday 17 February", time: "10:30" },
+      quietPostOp:      { date: "Monday 22 February",   time: "15:05" },
       pifuDischarge:    { date: "Monday 22 February",   time: "15:10" },
       quietThreeMonths: { date: "Monday 24 May",         time: "9:58" },
       threeMonthForm:   { date: "Monday 24 May",         time: "10:00" },
@@ -1208,9 +1261,7 @@ window.addEventListener("error", function (e) {
       quietAfterPifu:   { date: "Wednesday 9 June",      time: "9:18" },
       discharged:       { date: "Wednesday 9 June",      time: "9:19" },
       results:          { date: "Tuesday 12 January",    time: "8:16" },
-      homeResources:    { date: "Wednesday 9 June",      time: "9:20" },
-      quietBeforeSarah: { date: "Thursday 20 August",    time: "19:36" },
-      sarahChat:        { date: "Thursday 20 August",    time: "19:40" }
+      homeResources:    { date: "Wednesday 9 June",      time: "9:20" }
     },
     surgery: {
       dateLong: "Tue 9th February 2027",
@@ -1266,6 +1317,18 @@ window.addEventListener("error", function (e) {
       showLink: true
     },
     {
+      /* The chaser two days on, before the automated call that the laptop
+         deck shows. Offers the call without making it sound like a telling
+         off, and keeps the link open so he can still do it himself. */
+      id: "booking-chaser",
+      at: DEMO.timeline.bookingChaser,
+      text: "You have not yet booked your " + DEMO.specialty.toLowerCase() +
+            " appointment. If you are unable to book online, we will try to call " +
+            "you to book it with you. You can still book here: ",
+      link: DEMO.trust.domain + "/book",
+      showLink: true
+    },
+    {
       id: "appointment-booked",
       at: DEMO.timeline.appointmentBooked,
       text: "Your " + DEMO.specialty.toLowerCase() + " appointment is booked for " +
@@ -1286,17 +1349,48 @@ window.addEventListener("error", function (e) {
       id: "tests-reminder",
       at: DEMO.timeline.testsReminder,
       text: "Before your " + DEMO.specialty.toLowerCase() + " appointment on " +
-            DEMO.appointment.dateShort + " you need a blood test and an ECG. Please book them here: ",
+            DEMO.appointment.dateShort + " you need a blood test. Please book it here: ",
       link: DEMO.trust.domain + "/tests"
+    },
+    {
+      /* Sent just after he leaves the clinic. Links to the summary screen,
+         which is still to come. */
+      id: "appt-summary",
+      at: DEMO.timeline.apptSummary,
+      text: "Thank you for coming in today, " + DEMO.patient.firstName +
+            ". A summary of what you and " + DEMO.clinician +
+            " discussed, and what happens next, is now in your portal: ",
+      link: DEMO.trust.domain + "/summary"
     },
     {
       id: "pre-op-form",
       at: DEMO.timeline.preOpForm,
-      /* Ends mid-word on purpose. The real message would carry a link; this one
-         has none, so nothing can appear however the text wraps on the day. */
-      text: "Thank you for coming in today. You'll need to do a pre-op assessment before " +
-            "your " + DEMO.procedureForPatients + ". It takes about ten minutes: ",
+      /* Opens the pre-op assessment detour. */
+      text: "You'll need to do a pre-op assessment before your " +
+            DEMO.procedureForPatients + ". It takes about ten minutes: ",
       link: DEMO.trust.domain + "/pre-op"
+    },
+    {
+      /* Two days after the appointment, once the pre-op assessment has
+         marked him low risk (reviewed 13 January). A short-notice slot that
+         would otherwise go unfilled. He replies YES; the reply is not shown,
+         the presenter says it. No link, so nothing to tap. */
+      id: "short-notice",
+      at: DEMO.timeline.shortNotice,
+      text: "A short-notice slot for your " + DEMO.procedureForPatients + " has come up at " +
+            DEMO.appointment.site + " on " + DEMO.surgery.dateShort + ", arriving " +
+            DEMO.surgery.arrival + ". Reply YES to take it, or we will keep you on the " +
+            "waiting list for the next date."
+    },
+    {
+      /* The checklist arrives on its own, a week before surgery, framed the
+         way a trust frames it: do this or the operation may be cancelled. */
+      id: "checklist-intro",
+      at: DEMO.timeline.checklistIntro,
+      text: "Your " + DEMO.procedureForPatients + " is on " + DEMO.surgery.dateShort +
+            ". There are things to do before you come in. Please work through your " +
+            "checklist so we do not have to cancel on the day: ",
+      link: DEMO.trust.domain + "/checklist"
     },
     {
       id: "meds-reminder",
@@ -1305,6 +1399,28 @@ window.addEventListener("error", function (e) {
             DEMO.procedureForPatients + " on " + DEMO.surgery.dateShort +
             ". Keep taking your others as usual. Checklist: ",
       link: DEMO.trust.domain + "/checklist"
+    },
+    {
+      /* The day after the ablation, once he is home. Recovery is its own
+         stage: it happens to everyone who has a procedure, where PIFU
+         only happens to some. */
+      id: "post-op",
+      at: DEMO.timeline.postOp,
+      text: "You were discharged today after your " + DEMO.procedure +
+            ". Advice on recovering at home, and what to expect over the next " +
+            "few weeks, is in your portal: ",
+      link: DEMO.trust.domain
+    },
+    {
+      /* Verbatim from the Recovery guidance step in the staff portal's
+         pathway builder, with {first name} resolved. This is the one that
+         shows a change made in the builder reaching a patient already
+         partway through the pathway. */
+      id: "recovery-guidance",
+      at: DEMO.timeline.recoveryGuidance,
+      text: "Hi " + DEMO.patient.firstName + ", new advice on recovering at home " +
+            "after your heart procedure is ready. Read it here: ",
+      link: DEMO.trust.domain + "/ablation-recovery"
     },
     {
       id: "pifu-discharge",
@@ -1622,7 +1738,8 @@ window.addEventListener("error", function (e) {
 
   function visionCard(opts) {
     return '' +
-      '<div class="v-card' + (opts.unread ? " unread" : "") + (opts.compact ? " compact" : "") + '"' +
+      '<div class="v-card' + (opts.unread ? " unread" : "") + (opts.compact ? " compact" : "") +
+        (opts.soft ? " soft" : "") + '"' +
         (opts.open ? ' data-goto="' + opts.open + '"' : "") + '>' +
         '<span class="v-card-stripe"></span>' +
         '<div class="v-card-body">' +
@@ -1634,6 +1751,9 @@ window.addEventListener("error", function (e) {
                 '</span>'
               : '<b>' + opts.title + '</b>') +
             '<span class="v-card-sub">' + opts.body + '</span>' +
+            (opts.footTag
+              ? '<span class="v-card-foot">' + tag(opts.footTag.kind, opts.footTag.label) + '</span>'
+              : "") +
           '</span>' +
         '</div>' +
       '</div>';
@@ -1643,7 +1763,8 @@ window.addEventListener("error", function (e) {
     var a = DEMO.appointment;
     var o = opts || {};
     return '' +
-      '<div class="v-appt' + (o.past ? " past" : "") + '">' +
+      '<div class="v-appt' + (o.past ? " past" : "") + '"' +
+        (o.goto ? ' data-goto="' + o.goto + '"' : "") + '>' +
         '<div class="v-appt-main">' +
           '<span class="v-appt-label">' + (o.label || ("Your " + DEMO.specialty.toLowerCase() + " appointment")) + '</span>' +
           '<div class="v-appt-row">' +
@@ -1788,8 +1909,8 @@ window.addEventListener("error", function (e) {
           options: ["Improved", "About the same", "Got worse"] },
         { q: "In the past week, how often have you noticed palpitations?",
           options: ["Not at all", "Once or twice", "Most days", "Every day"] },
-        { q: "Have your symptoms stopped you doing your usual activities?",
-          options: ["No", "Sometimes", "Most of the time"] }
+        { q: "How much does your heart condition limit your daily activities?",
+          options: ["Not at all", "A little", "Quite a lot", "A lot"] }
       ]
     },
 
@@ -1806,7 +1927,7 @@ window.addEventListener("error", function (e) {
           options: ["Bisoprolol", "A blood thinner such as apixaban or warfarin",
                     "Other heart medicines", "None"] },
         { q: "Have you had a heart procedure before, like an ablation or cardioversion?",
-          options: ["Yes", "No", "Not sure"] }
+          options: ["No", "Yes", "Not sure"] }
       ],
       done: { title: "Questionnaire sent",
               body: "Thank you. The team will see this before your appointment on " + DEMO.appointment.dateShort + "." }
@@ -1822,7 +1943,7 @@ window.addEventListener("error", function (e) {
           options: ["High blood pressure", "Irregular heartbeat", "Asthma or COPD",
                     "Sleep apnoea", "Diabetes", "None of these"] },
         { q: "Have you or a blood relative had problems with an anaesthetic?",
-          options: ["Yes", "No", "Not sure"] },
+          options: ["No", "Yes", "Not sure"] },
         { q: "Do you have any allergies?", multi: true,
           options: ["Medicines", "Plasters or latex", "Foods", "No known allergies"] }
       ],
@@ -1956,7 +2077,8 @@ window.addEventListener("error", function (e) {
       '<div class="surface vision">' +
         statusBar(DEMO.timeline.testsReminder.time) +
         '<div class="v-main">' +
-          actionBar("back", { label: "Back to my appointments" }) +
+          /* The copy points at the appointments page, so the link goes there. */
+          actionBar("back", { label: "Back to my appointments", goto: "appointments" }) +
           confirmBlock("Appointment booked", [
             "Your new date and time will be visible in your appointments shortly. You should receive a confirmation by SMS or email."
           ]) +
@@ -1975,7 +2097,7 @@ window.addEventListener("error", function (e) {
     { from: "lock-accepted", until: "lock-appointment-booked", unreadUntil: "lock-quiet-quietwait",
       icon: "settings", title: "Set up comms preferences",
       body: "Choose how we contact you about your care." },
-    { from: "lock-meds-reminder", until: "lock-pifu-discharge", unreadUntil: "pre-op-checklist",
+    { from: "lock-checklist-intro", until: "lock-post-op", unreadUntil: "lock-quiet-quietpremeds",
       icon: "clipboard", open: "pre-op-checklist",
       title: "Pre-op checklist",
       body: "Everything to do before you come in for your surgery on " + DEMO.surgery.dateShort + "." }
@@ -1990,6 +2112,23 @@ window.addEventListener("error", function (e) {
       date: "30/09/26",
       note: "Your clinician will review your details and you\u2019ll be invited to book your appointment as soon as possible.",
       tiles: [["clipboard", "Waiting list info"], ["heartPulse", "About atrial fibrillation"]] },
+    { from: "lock-appt-summary", until: "lock-post-op",
+      title: "Listed for your " + DEMO.procedure,
+      date: "12/01/27",
+      note: "You were added to the waiting list at your appointment. We will be in touch with a date, and there are things to do before you come in." },
+    { from: "lock-post-op", until: "lock-pifu-discharge",
+      title: "Recovering from your " + DEMO.procedure,
+      date: "10/02/27",
+      note: "You are in the first few weeks after your procedure. Your team will be in touch about what happens next. Contact us if anything worries you before then.",
+      /* NEEDS CLINICAL SIGN-OFF, like the rest of the clinical content. */
+      resources: [
+        { icon: "heartPulse", compact: true, title: "The first few weeks",
+          body: "What is normal after an ablation, and what is not" },
+        { icon: "phone", compact: true, title: "When to get help",
+          body: "Symptoms to call us about, and who to ring out of hours" },
+        { icon: "bookOpen", compact: true, title: "Getting back to normal",
+          body: "Driving, lifting, exercise and going back to your usual routine" }
+      ] },
     { from: "lock-pifu-discharge", until: "lock-discharged",
       title: "On patient initiated follow up",
       date: "22/02/27",
@@ -2058,7 +2197,9 @@ window.addEventListener("error", function (e) {
     var appts = appointmentCard();
     var resources = "", statusTiles = "";
     if (st && st.resources) {
-      for (var i = 0; i < st.resources.length; i++) resources += visionCard(st.resources[i]);
+      for (var i = 0; i < st.resources.length; i++) {
+        if (reached(st.resources[i].from)) resources += visionCard(st.resources[i]);
+      }
     }
     if (st && st.tiles) {
       for (var t = 0; t < st.tiles.length; t++) statusTiles += tile(st.tiles[t][0], st.tiles[t][1]);
@@ -2188,7 +2329,7 @@ window.addEventListener("error", function (e) {
         '<div class="v-main">' +
           bookingHead("Please review your choice below and confirm that you\u2019re happy.", "Confirm your choice") +
           apptCard({
-            label: "Your blood test and ECG",
+            label: "Your blood test",
             when: bookingWhen(),
             where: DEMO.appointment.site,
             time: bookingTime()
@@ -2319,11 +2460,6 @@ window.addEventListener("error", function (e) {
         list: ["Nightwear and slippers", "Any medicines you take", "Glasses, hearing aids or dentures", "Something to read"],
         personal: "Most people go home the morning after. We expect to discharge you before midday on " + DEMO.surgery.dischargeExpected + "." },
 
-      { id: "nails", title: "Remove nail varnish",
-        sub: "Any time before you come in, so we can monitor your oxygen levels",
-        tag: { kind: "grey", label: "Before you come in" },
-        detail: "We clip a small monitor to your finger to check your oxygen levels. Nail varnish and false nails stop it working, so please remove them from at least one hand.", },
-
       { id: "food", title: "Stop eating",
         sub: "No food after midnight on Monday 8 February",
         tag: { kind: "warning", label: "By midnight, Mon 8 Feb" },
@@ -2347,28 +2483,34 @@ window.addEventListener("error", function (e) {
         detail: "Bring everything you take, including inhalers, patches and anything you buy yourself, in the original boxes.",
         personal: "Your record shows apixaban, bisoprolol and " + DEMO.medication + ". Bring all three, even though you have stopped taking the " + DEMO.medication + "." },
 
+      /* Still to do until the reminder arrives on 4 February, then done. */
       { id: "flecainide", title: "Stop your " + DEMO.medication,
-        sub: "You stopped this on Thursday 4 February",
-        tag: { kind: "success", label: "Done, Thu 4 Feb" },
-        detail: "You stopped taking this on Thursday 4 February, five days before your surgery, as your cardiologist asked.",
-        personal: "Stopping it beforehand lets the team see your heart rhythm clearly during the procedure." }
+        sub: "Five days before your surgery, on Thursday 4 February",
+        tag: { kind: "grey", label: "Thu 4 Feb" },
+        detail: "Your cardiologist has asked you to stop taking this on Thursday 4 February, five days before your surgery.",
+        personal: "Stopping it beforehand lets the team see your heart rhythm clearly during the procedure.",
+        after: { from: "lock-meds-reminder",
+          sub: "You stopped this on Thursday 4 February",
+          tag: { kind: "success", label: "Done, Thu 4 Feb" },
+          detail: "You stopped taking this on Thursday 4 February, five days before your surgery, as your cardiologist asked." } }
     ],
-    checked: { flecainide: true },
+    checked: {},
     settling: null,
     landed: null,
     open: null
   };
 
   function resetChecklist() {
-    CHECKLIST.checked = { flecainide: true };
+    CHECKLIST.checked = {};   /* flecainide is ticked by the story, not up front */
     CHECKLIST.settling = null;
     CHECKLIST.landed = null;
     CHECKLIST.open = null;
   }
 
-  function todoRow(item) {
+  function todoRow(raw) {
+    var item = checklistItem(raw);
     var settling = CHECKLIST.settling === item.id;
-    var done = !!CHECKLIST.checked[item.id] || settling;
+    var done = checklistDone(item) || settling;
     var cls = "v-todo-row" + (settling ? " settling" : "") +
               (CHECKLIST.landed === item.id ? " landed" : "");
     return '' +
@@ -2382,6 +2524,19 @@ window.addEventListener("error", function (e) {
       '</div>';
   }
 
+  /* An item can read differently once the story has passed it. */
+  function checklistItem(it) {
+    if (it.after && reached(it.after.from)) {
+      return { id: it.id, title: it.title, sub: it.after.sub, tag: it.after.tag,
+               detail: it.after.detail, list: it.list, personal: it.personal,
+               after: it.after };   /* carried through, so the done check still sees it */
+    }
+    return it;
+  }
+  function checklistDone(it) {
+    return !!CHECKLIST.checked[it.id] || !!(it.after && reached(it.after.from));
+  }
+
   function todoGroup(heading, items) {
     if (!items.length) return "";
     var rows = "";
@@ -2393,7 +2548,7 @@ window.addEventListener("error", function (e) {
     if (!CHECKLIST.open) return "";
     var item = null;
     for (var i = 0; i < CHECKLIST.items.length; i++) {
-      if (CHECKLIST.items[i].id === CHECKLIST.open) item = CHECKLIST.items[i];
+      if (CHECKLIST.items[i].id === CHECKLIST.open) item = checklistItem(CHECKLIST.items[i]);
     }
     if (!item) return "";
     /* The list is plain lines in the frame, not bullets. */
@@ -2413,7 +2568,7 @@ window.addEventListener("error", function (e) {
             '</div>' +
           '</div>' +
           '<div class="v-modal-actions">' +
-            (CHECKLIST.checked[item.id] ? "" :
+            (checklistDone(item) ? "" :
               '<button type="button" class="v-btn primary" data-sheet="done">Done</button>') +
             '<button type="button" class="v-btn secondary" data-sheet="close">Close</button>' +
           '</div>' +
@@ -2434,8 +2589,8 @@ window.addEventListener("error", function (e) {
             '</div>' +
           '</div>' +
           '<div class="v-todo-groups">' +
-            todoGroup("To do", CHECKLIST.items.filter(function (i) { return !CHECKLIST.checked[i.id]; })) +
-            todoGroup("Done", CHECKLIST.items.filter(function (i) { return CHECKLIST.checked[i.id]; })) +
+            todoGroup("To do", CHECKLIST.items.filter(function (i) { return !checklistDone(i); })) +
+            todoGroup("Done", CHECKLIST.items.filter(function (i) { return checklistDone(i); })) +
           '</div>' +
         '</div>' +
         homeIndicator() +
@@ -2449,58 +2604,6 @@ window.addEventListener("error", function (e) {
      the team if anything changes. Nothing left to do. */
 
 
-  /* ================================================================
-     SIDE STORY: SARAH
-     A separate patient moving from children's to adult diabetes
-     services. The assistant listens, offers practical help and
-     hands off to her diabetes nurse rather than giving clinical
-     advice. Chat bubbles are invented; no Vision component exists.
-     ================================================================ */
-
-  var SARAH = {
-    name: "Sarah",
-    update: {
-      unread: true,
-      icon: "bookOpen",
-      title: "Moving to adult services",
-      body: "What changes when you move from children's to adult diabetes care, and who you will meet."
-    },
-    chat: [
-      ["me", "I start college in September and I'm worried about where I'll do my insulin, and what people will think of me."],
-      ["them", "Both of those come up a lot, and neither is silly. On the practical side, colleges have to make reasonable adjustments, so you can ask for somewhere private and time between lectures."],
-      ["me", "I don't really want to make a fuss though"],
-      ["them", "You wouldn't be. Your diabetes nurse can write to the college for you, so you don't have to explain it yourself. Shall I ask her?"],
-      ["me", "Yes please, that would help"],
-      ["them", "Done. She'll be in touch this week, and I've added a note about starting college so the adult team see it too."]
-    ]
-  };
-
-  function stepSarahChat() {
-    var log = "";
-    for (var i = 0; i < SARAH.chat.length; i++) {
-      log += '<div class="v-bubble ' + SARAH.chat[i][0] + '">' + SARAH.chat[i][1] + '</div>';
-    }
-    return '' +
-      '<div class="surface vision">' +
-        statusBar(DEMO.timeline.sarahChat.time) +
-        '<div class="v-main">' +
-          actionBar("name", { name: SARAH.name }) +
-          updatesSection([SARAH.update]) +
-        '</div>' +
-        toolbar("house") +
-        homeIndicator() +
-        '<div class="v-scrim">' +
-          '<div class="v-chat-sheet">' +
-            '<div class="v-chat-head">' +
-              '<span class="v-chat-avatar">' + icon("question", 22, 1.8) + '</span>' +
-              '<h2>Ask a question</h2>' +
-            '</div>' +
-            '<div class="v-chat-log">' + log + '</div>' +
-            '<div class="v-chat-field">Write a message</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-  }
 
   /* ================================================================
      MY CARE
@@ -2520,15 +2623,19 @@ window.addEventListener("error", function (e) {
         body: "Completed and sent to hospital" },
       { from: "form-submitted", date: "10/11/26", title: "Waiting well check",
         body: "You told us how you had been while waiting" },
+      { from: "lock-questionnaire", date: "19/11/26", title: "Pre-appointment questionnaire",
+        body: "Completed and sent to the team" },
       { from: "lock-appointment-booked", date: "19/11/26", title: "Appointment booked",
         body: "Cardiology, 12 January at " + DEMO.appointment.site },
-      { from: "booking-booked", booking: true, title: "Blood test and ECG booked",
+      { from: "booking-booked", booking: true, title: "Blood test booked",
         body: "At " + DEMO.appointment.site },
       { from: "lock-pre-op-form", date: "12/01/27", title: "Cardiology appointment",
         body: "You were seen by the team and listed for surgery" },
+      { from: "lock-short-notice", date: "12/01/27", title: "Pre-op assessment",
+        body: "Completed and sent to the team" },
       { from: "lock-meds-reminder", date: "04/02/27", title: "Flecainide stopped",
         body: "Five days before your surgery, as your team asked" },
-      { from: "lock-pifu-discharge", date: "09/02/27", title: "Surgery",
+      { from: "lock-post-op", date: "09/02/27", title: "Surgery",
         body: "Your ablation went ahead at " + DEMO.appointment.site },
       { from: "lock-quiet-quietthreemonths", date: "22/02/27", title: "Moved to patient initiated follow up",
         body: "No routine appointments booked. Contact us if things change." },
@@ -2551,12 +2658,13 @@ window.addEventListener("error", function (e) {
 
   /* Appointments move from upcoming to previous once the story passes them. */
   var APPOINTMENTS = [
-    { on: [2027, 0, 12], from: "lock-appointment-booked", past: "lock-pre-op-form",
+    { on: [2027, 0, 12], from: "lock-appointment-booked", past: "lock-appt-summary",
+      summary: "appt-summary", summaryFrom: "lock-appt-summary",
       label: "Your " + DEMO.specialty.toLowerCase() + " appointment",
       when: DEMO.appointment.dateLong, time: DEMO.appointment.time, where: DEMO.appointment.site },
     { booking: true, from: "booking-booked", past: "lock-quiet-appointment-day",
-      label: "Your blood test and ECG", where: DEMO.appointment.site },
-    { on: [2027, 1, 9], from: "lock-pre-op-form", past: "lock-pifu-discharge",
+      label: "Your blood test", where: DEMO.appointment.site },
+    { on: [2027, 1, 9], from: "lock-short-notice", past: "lock-post-op",
       label: "Your surgery", when: DEMO.surgery.dateLong,
       time: "arrive " + DEMO.surgery.arrival, where: DEMO.appointment.site }
   ];
@@ -2646,21 +2754,23 @@ window.addEventListener("error", function (e) {
     return { up: up, past: past };
   }
 
-  function apptCardFor(a) {
+  function apptCardFor(a, linkable) {
     return apptCard({
       label: a.label,
       when: a.booking ? bookingWhen() : a.when,
       time: a.booking ? bookingTime() : a.time,
       where: a.where,
-      past: reached(a.past)
+      past: reached(a.past),
+      /* once the summary exists, the card is the way back to it */
+      goto: (linkable && a.summary && reached(a.summaryFrom)) ? a.summary : null
     });
   }
 
   function stepAppointments() {
     var now = apptsNow();
     var upcoming = "", previous = "";
-    for (var i = 0; i < now.up.length; i++) upcoming += apptCardFor(now.up[i]);
-    for (var j = 0; j < now.past.length; j++) previous += apptCardFor(now.past[j]);
+    for (var i = 0; i < now.up.length; i++) upcoming += apptCardFor(now.up[i], true);
+    for (var j = 0; j < now.past.length; j++) previous += apptCardFor(now.past[j], true);
     return '' +
       '<div class="surface vision">' +
         statusBar(DEMO.timeline.appointmentsPage.time) +
@@ -2766,6 +2876,22 @@ window.addEventListener("error", function (e) {
      the team. Reached from the nav, so it follows the exploring rules.
      ================================================================ */
 
+  /* A resource reads as New until he has seen it: either he opens the
+     Resources page, or the story moves into the next chapter. */
+  var resourcesRead = {};
+  function resourceKey(r) { return r.from + "|" + r.title; }
+  function chapterOf(i) { var n = 0; for (var q = 0; q <= i; q++) if (STEPS[q].stage) n++; return n; }
+  function isNewResource(r) {
+    if (!reached(r.from) || resourcesRead[resourceKey(r)]) return false;
+    return chapterOf(storyAt) === chapterOf(ord(r.from));
+  }
+  function markResourcesRead() {
+    for (var i = 0; i < RESOURCE_PAGE.yours.length; i++) {
+      var r = RESOURCE_PAGE.yours[i];
+      if (isNewResource(r)) resourcesRead[resourceKey(r)] = true;
+    }
+  }
+
   var RESOURCE_PAGE = {
     /* His own, keyed to where his treatment has got to, newest first. */
     yours: [
@@ -2778,12 +2904,17 @@ window.addEventListener("error", function (e) {
       { from: "lock-pre-op-form", icon: "heartPulse", compact: true,
         title: "About your " + DEMO.procedure,
         body: "How the procedure works and what to expect afterwards" },
-      { from: "lock-pifu-discharge", icon: "heartPulse", compact: true,
+      { from: "lock-post-op", icon: "heartPulse", compact: true,
         title: "Recovering from your procedure",
         body: "What to expect in the weeks and months afterwards" },
-      { from: "lock-pifu-discharge", icon: "bookOpen", compact: true,
+      { from: "lock-post-op", icon: "bookOpen", compact: true,
         title: "Looking after your heart",
-        body: "Staying active, eating well and keeping to your medicines" }
+        body: "Staying active, eating well and keeping to your medicines" },
+      /* Put here by the Recovery guidance step in the pathway builder,
+         partway through his recovery. */
+      { from: "lock-recovery-guidance", icon: "heartPulse", compact: true,
+        title: "Recovering at home after your " + DEMO.procedure,
+        body: "The latest advice from the cardiology team" }
     ],
     /* The same for everyone, whatever they are being seen for. */
     general: [
@@ -2819,7 +2950,10 @@ window.addEventListener("error", function (e) {
     var yours = "";
     for (var i = RESOURCE_PAGE.yours.length - 1; i >= 0; i--) {
       var r = RESOURCE_PAGE.yours[i];
-      if (reached(r.from)) yours += visionCard(r);
+      if (!reached(r.from)) continue;
+      yours += visionCard(isNewResource(r)
+        ? Object.assign({}, r, { soft: true, footTag: { kind: "info", label: "New" } })
+        : r);
     }
     var general = "";
     for (var g = 0; g < RESOURCE_PAGE.general.length; g++) general += visionCard(RESOURCE_PAGE.general[g]);
@@ -2840,6 +2974,72 @@ window.addEventListener("error", function (e) {
   }
 
   /* ================================================================
+     APPOINTMENT SUMMARY
+     Structure from 4183:12061, which gives the two headings and leaves
+     the content to be written. Follows the canon's appointment
+     transcript. All of it is invented and NEEDS CLINICAL SIGN-OFF.
+     ================================================================ */
+
+  /* Follows the PRSB outpatient letter headings, written to the patient
+     rather than to the GP, which is what the standard says is best
+     practice. The plan sits at the top, as the Royal College of
+     Radiologists recommends for anything the reader has to act on.
+     Every line is invented. NEEDS CLINICAL SIGN-OFF. */
+  var APPT_SUMMARY = {
+    /* Plan and requested actions */
+    next: [
+      "Complete your pre-op assessment. It is in your portal now and takes about ten minutes.",
+      "We will be in touch with a date for your " + DEMO.procedure + ".",
+      "Keep taking your medicines. We will tell you when to stop the " + DEMO.medication + "."
+    ],
+    /* Medications and medical devices */
+    medicines: [
+      ["Started today", "apixaban, a blood thinner you need to be taking before your " + DEMO.procedure],
+      ["Started today", DEMO.medication + ", to help steady your heart rhythm until your procedure"],
+      ["Keep taking", "bisoprolol, at the same dose as before"]
+    ],
+    /* Clinical narrative */
+    discussed: [
+      "Your blood test in December was normal, and your ECG still showed atrial fibrillation.",
+      "You told us the palpitations had got worse, and that the bisoprolol your GP started has not settled them.",
+      "We talked through what an ablation involves. It is done through a small tube passed into a vein at the top of your leg, and most people go home the next day.",
+      "We agreed together that an ablation is the right next step for you, and you were added to the waiting list today."
+    ]
+  };
+
+  function stepApptSummary() {
+    var next = "";
+    for (var n = 0; n < APPT_SUMMARY.next.length; n++) next += "<li>" + APPT_SUMMARY.next[n] + "</li>";
+    var meds = "";
+    for (var m = 0; m < APPT_SUMMARY.medicines.length; m++) {
+      meds += "<li><b>" + APPT_SUMMARY.medicines[m][0] + ":</b> " + APPT_SUMMARY.medicines[m][1] + "</li>";
+    }
+    var discussed = "";
+    for (var i = 0; i < APPT_SUMMARY.discussed.length; i++) discussed += "<p>" + APPT_SUMMARY.discussed[i] + "</p>";
+
+    return '' +
+      '<div class="surface vision">' +
+        statusBar(DEMO.timeline.apptSummary.time) +
+        '<div class="v-main v-letter">' +
+          actionBar("back", { label: "Back to my appointments", goto: "appointments" }) +
+          '<div class="v-section">' +
+            apptCardFor(APPOINTMENTS[0]) +
+            '<p class="v-seenby">Seen by ' + DEMO.clinicianFull + ', ' + DEMO.clinicianRole +
+              ', ' + DEMO.specialty.toLowerCase() + ' outpatients</p>' +
+          '</div>' +
+          myCareSection("What happens next", '<div class="v-prose"><ul>' + next + '</ul></div>') +
+          myCareSection("Your medicines", '<div class="v-prose"><ul>' + meds + '</ul></div>') +
+          myCareSection("What we discussed", '<div class="v-prose">' + discussed + '</div>') +
+          '<p class="v-results-foot">A copy of this summary has been sent to your GP. ' +
+            'If anything here is not clear, contact the ' + DEMO.specialty.toLowerCase() +
+            ' team using the details in your portal.</p>' +
+        '</div>' +
+        toolbar("calendar") +
+        homeIndicator() +
+      '</div>';
+  }
+
+  /* ================================================================
      THE SPINE
      kind: "beat"        tap anywhere advances
            "interactive" taps do real things; advances on completion,
@@ -2848,11 +3048,11 @@ window.addEventListener("error", function (e) {
 
   var STEPS = [
     { id: "lock-quiet-quietopen", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, the story opens", render: stepLockQuiet("quietOpen") },
+      label: "Lock screen: quiet, the story opens", clockKey: "quietOpen", render: stepLockQuiet("quietOpen") },
     { id: "lock-referral",   kind: "beat", tone: "dark",  slide: 3, frame: "66",
       label: "Lock screen: referral being reviewed", render: stepLock("referral-reviewed") },
     { id: "lock-quiet-quietpreaccepted", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, eight days on", render: stepLockQuiet("quietPreAccepted") },
+      label: "Lock screen: quiet, eight days on", clockKey: "quietPreAccepted", render: stepLockQuiet("quietPreAccepted") },
     { id: "lock-accepted", kind: "interactive", tone: "dark", slide: 7, frame: "67",
       label: "Lock screen: referral accepted, portal link", render: stepLock("referral-accepted", true) },
     { id: "home-useful-links", isHome: true, kind: "beat", tone: "light", slide: 7, frame: "3916:30065",
@@ -2860,7 +3060,7 @@ window.addEventListener("error", function (e) {
     { id: "my-care", navPage: true, kind: "beat", tone: "light", slide: null, frame: "4106:19841",
       label: "My care: treatment, resources, get in touch", render: stepMyCare },
     { id: "lock-quiet-quietwait", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, six weeks on", render: stepLockQuiet("quietWait") },
+      label: "Lock screen: quiet, six weeks on", clockKey: "quietWait", render: stepLockQuiet("quietWait") },
     { id: "lock-waiting-well", kind: "interactive", tone: "dark", slide: null, frame: null,
       label: "Lock screen: waiting well form request", render: stepLock("waiting-well", true) },
     { id: "form-waiting-well", kind: "interactive", tone: "light", slide: 8, frame: "3912:29756",
@@ -2868,17 +3068,19 @@ window.addEventListener("error", function (e) {
     { id: "form-submitted", kind: "beat", tone: "light", slide: 8, frame: "3928:30838",
       label: "Form submitted confirmation", render: stepFormSubmitted },
     { id: "lock-quiet-quietpreinvite", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, six days on", render: stepLockQuiet("quietPreInvite") },
+      label: "Lock screen: quiet, six days on", clockKey: "quietPreInvite", render: stepLockQuiet("quietPreInvite") },
     { id: "lock-booking-invite", kind: "beat", tone: "dark", slide: 11, frame: null,
       label: "Lock screen: invite to book (ignored)", render: stepLock("booking-invite") },
+    { id: "lock-booking-chaser", kind: "beat", tone: "dark", slide: 12, frame: null,
+      label: "Lock screen: not booked yet, we will try to call", render: stepLock("booking-chaser") },
     { id: "lock-quiet-quietprebooking", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, three days on", render: stepLockQuiet("quietPreBooking") },
+      label: "Lock screen: quiet, the next day", clockKey: "quietPreBooking", render: stepLockQuiet("quietPreBooking") },
     { id: "lock-appointment-booked", kind: "interactive", tone: "dark", slide: 13, frame: null,
       label: "Lock screen: appointment booked", render: stepLock("appointment-booked", true), opens: "home-booked" },
     { id: "home-booked", navPage: true, isHome: true, kind: "beat", tone: "light", slide: 13, frame: "4106:19798",
       label: "Portal home: the appointment has just landed", clock: "appointmentBooked", render: stepHome },
     { id: "lock-quiet-quietevening", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, later that evening", render: stepLockQuiet("quietEvening") },
+      label: "Lock screen: quiet, later that evening", clockKey: "quietEvening", render: stepLockQuiet("quietEvening") },
     { id: "lock-questionnaire", kind: "interactive", tone: "dark", slide: 14, frame: null,
       label: "Lock screen: pre-appointment questionnaire", render: stepLock("questionnaire", true), opens: "form-questionnaire" },
     { id: "form-questionnaire", navPage: true, form: "questionnaire", kind: "interactive", tone: "light", slide: 14, frame: null,
@@ -2890,9 +3092,9 @@ window.addEventListener("error", function (e) {
     { id: "appointments", navPage: true, kind: "beat", tone: "light", slide: null, frame: "4130:11867",
       label: "Appointments: upcoming and previous", render: stepAppointments },
     { id: "lock-quiet-quietpretests", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, three weeks on", render: stepLockQuiet("quietPreTests") },
+      label: "Lock screen: quiet, three weeks on", clockKey: "quietPreTests", render: stepLockQuiet("quietPreTests") },
     { id: "lock-tests-reminder", kind: "interactive", tone: "dark", slide: 10, frame: null,
-      label: "Lock screen: book bloods and ECG", render: stepLock("tests-reminder", true) },
+      label: "Lock screen: book a blood test", render: stepLock("tests-reminder", true) },
     { id: "booking-date", kind: "interactive", tone: "light", slide: 10, frame: "3939:32249",
       label: "Book a blood test: choose a date", render: stepBloodTestBooking },
     { id: "booking-slot", kind: "interactive", tone: "light", slide: 10, frame: "3939:32530",
@@ -2902,37 +3104,56 @@ window.addEventListener("error", function (e) {
     { id: "booking-booked", kind: "beat", tone: "light", slide: 10, frame: "3945:33175",
       label: "Blood test booked confirmation", render: stepBookingBooked },
     { id: "lock-quiet-appointment-day", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, morning of the appointment", render: stepLockQuiet("appointmentDay") },
+      label: "Lock screen: quiet, morning of the appointment", clockKey: "appointmentDay", render: stepLockQuiet("appointmentDay") },
+    { id: "lock-appt-summary", kind: "interactive", tone: "dark", slide: 18, frame: null,
+      label: "Lock screen: summary of your appointment", render: stepLock("appt-summary", true),
+      opens: "appt-summary" },
+    { id: "appt-summary", navPage: true, kind: "beat", tone: "light", slide: 18, frame: "4183:12061",
+      label: "Appointment summary: what was discussed, what happens next", render: stepApptSummary },
     { id: "lock-pre-op-form", kind: "interactive", tone: "dark", slide: 18, frame: null,
       label: "Lock screen: pre-op assessment to complete", render: stepLock("pre-op-form", true), opens: "form-pre-op" },
     { id: "form-pre-op", navPage: true, form: "pre-op", kind: "interactive", tone: "light", slide: 18, frame: null,
       label: "Pre-op assessment: three questions", render: stepForm("pre-op") },
-    { id: "lock-quiet-quietpremeds", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, three weeks on", render: stepLockQuiet("quietPreMeds") },
-    { id: "lock-meds-reminder", kind: "interactive", tone: "dark", slide: 21, frame: null,
-      label: "Lock screen: stop your medication", render: stepLock("meds-reminder", true) },
-    { id: "pre-op-checklist", kind: "beat", tone: "light", slide: 21, frame: "3961:34125",
+    { id: "lock-short-notice", kind: "beat", tone: "dark", slide: 20, frame: null,
+      label: "Lock screen: short-notice surgery slot offered", render: stepLock("short-notice") },
+    { id: "lock-quiet-quietprechecklist", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
+      label: "Lock screen: quiet, three weeks on", clockKey: "quietPreChecklist", render: stepLockQuiet("quietPreChecklist") },
+    { id: "lock-checklist-intro", kind: "interactive", tone: "dark", slide: 21, frame: null,
+      label: "Lock screen: get ready for your surgery", render: stepLock("checklist-intro", true),
+      opens: "pre-op-checklist" },
+    { id: "pre-op-checklist", navPage: true, kind: "beat", tone: "light", slide: 21, frame: "3961:34125",
       label: "Pre-op checklist", render: stepPreOpChecklist },
+    { id: "lock-quiet-quietpremeds", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
+      label: "Lock screen: quiet, two days on", clockKey: "quietPreMeds", render: stepLockQuiet("quietPreMeds") },
+    { id: "lock-meds-reminder", kind: "interactive", tone: "dark", slide: 21, frame: null,
+      label: "Lock screen: stop your medication", render: stepLock("meds-reminder", true),
+      opens: "pre-op-checklist" },
     { id: "lock-quiet-quietsurgeryday", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, the morning of surgery", render: stepLockQuiet("quietSurgeryDay") },
+      label: "Lock screen: quiet, the morning of surgery", clockKey: "quietSurgeryDay", render: stepLockQuiet("quietSurgeryDay") },
+    { id: "lock-post-op", kind: "interactive", tone: "dark", slide: 22, frame: null,
+      label: "Lock screen: home after your procedure", render: stepLock("post-op", true),
+      opens: "home-booked" },
+    { id: "lock-quiet-quietrecovery", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
+      label: "Lock screen: quiet, a week on", clockKey: "quietRecovery", render: stepLockQuiet("quietRecovery") },
+    { id: "lock-recovery-guidance", kind: "interactive", tone: "dark", slide: 22, frame: null,
+      label: "Lock screen: new recovery advice, changed in the pathway", render: stepLock("recovery-guidance", true),
+      opens: "resources" },
+    { id: "lock-quiet-quietpostop", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
+      label: "Lock screen: quiet, five days on", clockKey: "quietPostOp", render: stepLockQuiet("quietPostOp") },
     { id: "lock-pifu-discharge", kind: "interactive", tone: "dark", slide: 22, frame: null,
       label: "Lock screen: discharged to PIFU", render: stepLock("pifu-discharge", true), opens: "home-booked" },
     { id: "lock-quiet-quietthreemonths", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, three months on", render: stepLockQuiet("quietThreeMonths") },
+      label: "Lock screen: quiet, three months on", clockKey: "quietThreeMonths", render: stepLockQuiet("quietThreeMonths") },
     { id: "lock-three-month-form", kind: "interactive", tone: "dark", slide: 24, frame: null,
       label: "Lock screen: three-month form sent automatically", render: stepLock("three-month-form", true), opens: "pifu-form" },
     { id: "pifu-form", navPage: true, form: "three-month", kind: "interactive", tone: "light", slide: 24, frame: "3970:47581",
       label: "Three-month check: three questions", render: stepForm("three-month") },
     { id: "lock-quiet-quietafterpifu", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, two weeks on", render: stepLockQuiet("quietAfterPifu") },
+      label: "Lock screen: quiet, two weeks on", clockKey: "quietAfterPifu", render: stepLockQuiet("quietAfterPifu") },
     { id: "lock-discharged", kind: "interactive", tone: "dark", slide: 26, frame: null,
       label: "Lock screen: discharged, contact your GP", render: stepLock("discharged", true) },
     { id: "home-resources", isHome: true, kind: "beat", tone: "light", slide: 26, frame: "3970:47654",
       label: "Portal home: helpful resources", clock: "homeResources", render: stepHome },
-    { id: "lock-quiet-quietbeforesarah", stage: true, kind: "beat", tone: "dark", slide: null, frame: null,
-      label: "Lock screen: quiet, before the side story", render: stepLockQuiet("quietBeforeSarah", "warm") },
-    { id: "sarah-chat", sideStory: true, kind: "beat", tone: "light", slide: null, frame: null,
-      label: "Side story: Sarah, moving to adult services", render: stepSarahChat }
   ];
 
   /* ================================================================
@@ -2944,6 +3165,8 @@ window.addEventListener("error", function (e) {
   var stepNumber = document.getElementById("stepNumber");
   var navPill = document.getElementById("navPill");
   var panel = document.getElementById("presenterPanel");
+  var stagePanel = document.getElementById("stagePanel");
+  var stageList = document.getElementById("stageList");
   var panelSteps = document.getElementById("presenterSteps");
   var index = 0;
 
@@ -2976,6 +3199,10 @@ window.addEventListener("error", function (e) {
   }
 
   function goTo(i) {
+    /* Seen once he leaves the portal, not when he wanders between its
+       pages: exploring is all one moment in the story. */
+    if (STEPS[index] && STEPS[index].id === "resources" &&
+        i !== index && !(STEPS[i] && STEPS[i].navPage)) markResourcesRead();
     /* Opening a form starts it at question one. Moving within a form
        re-renders rather than calling goTo, so this does not disturb it. */
     if (i >= 0 && i < STEPS.length && STEPS[i].form && i !== index) delete FORM_STATE[STEPS[i].form];
@@ -3001,6 +3228,7 @@ window.addEventListener("error", function (e) {
     resetForm();
     storyAt = 0;
     MYCARE.tab = 0;
+    resourcesRead = {};
     resetBooking();
     resetChecklist();
     closePanel();
@@ -3210,22 +3438,62 @@ window.addEventListener("error", function (e) {
     var r = device.getBoundingClientRect();
     return (e.clientX - r.left) < CORNER && (r.bottom - e.clientY) < CORNER;
   }
+  function inTopCorner(e) {
+    var r = device.getBoundingClientRect();
+    return (e.clientX - r.left) < CORNER && (e.clientY - r.top) < CORNER;
+  }
   function cancelPress() {
     if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
   }
 
   device.addEventListener("pointerdown", function (e) {
-    if (panel.classList.contains("open") || !inCorner(e)) return;
+    if (panel.classList.contains("open") || stagePanel.classList.contains("open")) return;
+    var top = inTopCorner(e), bottom = inCorner(e);
+    if (!top && !bottom) return;
     cancelPress();
     pressTimer = setTimeout(function () {
       pressTimer = null;
       suppressClick = true;
-      openPanel();
+      if (top) openStages(); else openPanel();
     }, 650);
   });
   device.addEventListener("pointerup", cancelPress);
   device.addEventListener("pointerleave", cancelPress);
   device.addEventListener("pointercancel", cancelPress);
+
+  /* Long press the top left for the stages on their own: the one thing a
+     presenter needs mid-demo when the room has clicked ahead. */
+  function openStages() { stagePanel.classList.add("open"); paintStages(); }
+  function closeStages() { stagePanel.classList.remove("open"); }
+
+  function paintStages() {
+    stageList.innerHTML = "";
+    var n = 0;
+    for (var i = 0; i < STEPS.length; i++) {
+      if (!STEPS[i].stage) continue;
+      n++;
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "stage-row" + (i === index ? " current" : "");
+      b.setAttribute("data-index", i);
+      b.innerHTML = "<b>Stage " + (n < 10 ? "0" : "") + n + "</b>" +
+                    "<span>" + DEMO.timeline[STEPS[i].clockKey].date + "</span>";
+      stageList.appendChild(b);
+    }
+  }
+
+  stageList.addEventListener("click", function (e) {
+    var btn = e.target.closest(".stage-row");
+    if (!btn) return;
+    e.stopPropagation();
+    goTo(parseInt(btn.getAttribute("data-index"), 10));
+    closeStages();
+  });
+  document.getElementById("btnStageClose").addEventListener("click", function (e) {
+    e.stopPropagation();
+    closeStages();
+  });
+  stagePanel.addEventListener("click", function (e) { e.stopPropagation(); });
 
   function openPanel() { panel.classList.add("open"); paintPanel(); }
   function closePanel() { panel.classList.remove("open"); }
